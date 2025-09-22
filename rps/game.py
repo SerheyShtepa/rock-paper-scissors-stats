@@ -1,5 +1,5 @@
 import random
-from stats import append_result, load_results, basic_stats
+from rps.stats import append_result, load_results, basic_stats
 from scripts.analyze import analyze_game
 
 CHOICE = {
@@ -20,14 +20,21 @@ LOSE_AGAINST = {
 
 PATTERN_LENGTH = 2
 
+
 def input_choice() -> str:
-    players_choice = input("Enter your choice (r - rock, p - paper, s - scissors, esc - for break): ").lower()
-    if players_choice not in CHOICE and players_choice != "esc":
+    players_choice = input(
+        "Enter your choice (r - rock, p - paper, s - scissors, esc - for break, st - for stats): "
+    ).lower()
+
+    if players_choice not in CHOICE and players_choice not in ("esc", "st"):
         return "Invalid choice!"
     elif players_choice == "esc":
         return "Good bye"
+    elif players_choice == "st":
+        return "stats"
     else:
         return players_choice
+
 
 def computer_choice() -> str:
     predicted = analyze_game(PATTERN_LENGTH)
@@ -47,13 +54,31 @@ def determine_winner(player_move: str, computer_move: str) -> dict:
         result["result"] = "lose"
     return result
 
+
+def print_stats(stats: dict) -> None:
+    print("\n📊 GAME STATISTICS 📊")
+    print("-" * 30)
+    print(f"Total games         : {stats['total_games']}")
+    print(f"Wins                : {stats['wins']}")
+    print(f"Losses              : {stats['losses']}")
+    print(f"Draws               : {stats['draws']}")
+    print(f"Win rate            : {stats['win_rate']:.1f}%")
+    print(f"Most common choice  : {stats['most_common_player_choice']}")
+    print("-" * 30)
+
+
 if __name__ == "__main__":
     while True:
         player_move = input_choice()
+        df = load_results()
+        stats = basic_stats(df)
 
         if player_move == "Good bye":
             print("Good bye")
             break
+        elif player_move == "stats":
+            print_stats(stats)
+            continue
         elif player_move == "Invalid choice!":
             print("Invalid choice!")
             continue
@@ -61,17 +86,5 @@ if __name__ == "__main__":
         comp_move = computer_choice()
         result = determine_winner(player_move, comp_move)
         append_result(result)
-        df = load_results()
-        stats = basic_stats(df)
-        #TODO
-        # add statistic with another function
-        # print(
-        #     f"Total games: {stats['total_games']},"
-        #     f"Wins: {stats['wins']},"
-        #     f"Losses: {stats['losses']},"
-        #     f"Draws: {stats['draws']},"
-        #     f"Win rate: {stats['win_rate']:.1f}%,"
-        #     f"Most common choice: {stats['most_common_player_choice']}"
-        # )
         print(f"You chose {CHOICE[player_move]}, computer chose {CHOICE[comp_move]}")
         print(result)

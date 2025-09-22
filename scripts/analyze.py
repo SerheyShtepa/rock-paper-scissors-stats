@@ -80,5 +80,6 @@ def analyze_game(pattern_length) -> str:
 
     save_pattern_stats(pattern_stats)
     return predicted_move
-if __name__ == "__main__":
-    print(analyze_game(2))
+
+# if __name__ == "__main__":
+#     print(analyze_game(2))
