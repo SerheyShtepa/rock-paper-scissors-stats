@@ -53,7 +53,6 @@ def learn_patterns(df, pattern_length=2) -> dict:
 
 
 def save_pattern_stats(pattern_stats: dict, path: Path | str = Path("../data/pattern_stats.json")) -> None:
-
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     serializable = {}
@@ -68,7 +67,6 @@ def save_pattern_stats(pattern_stats: dict, path: Path | str = Path("../data/pat
     tmp.replace(path)
 
 
-
 def analyze_game(pattern_length) -> str:
     df = load_results()
     if len(df) < 1:
@@ -78,7 +76,7 @@ def analyze_game(pattern_length) -> str:
     last_moves = [(df.iloc[i]["player"], df.iloc[i]["result"]) for i in range(len(df))]
     predicted_move = predict_next_move(pattern_stats, last_moves, pattern_length=pattern_length)
 
-    save_pattern_stats(pattern_stats)
+    # save_pattern_stats(pattern_stats)
     return predicted_move
 
 # if __name__ == "__main__":

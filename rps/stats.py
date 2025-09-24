@@ -30,7 +30,7 @@ def append_result(result: dict, path: Path | str = DEFAULT_PATH) -> None:
     new_row = pd.DataFrame([{
         "player": result.get("player"),
         "computer": result.get("computer"),
-        "result":   result.get("result"),
+        "result": result.get("result"),
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }])
 
@@ -56,3 +56,9 @@ def basic_stats(df: pd.DataFrame) -> dict:
         "win_rate": win_rate,
         "most_common_player_choice": most_common_player
     }
+
+
+def reset_game():
+    df = pd.DataFrame(columns=DEFAULT_COLUMNS)
+    DEFAULT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(DEFAULT_PATH, index=False)

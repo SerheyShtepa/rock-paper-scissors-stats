@@ -67,24 +67,37 @@ def print_stats(stats: dict) -> None:
     print("-" * 30)
 
 
-if __name__ == "__main__":
+def play_round(player_move: str) -> dict:
+    comp_move = computer_choice()
+    result = determine_winner(player_move, comp_move)
+    append_result(result)
+    df = load_results()
+    stats = basic_stats(df)
+    return {
+        "player move": player_move,
+        "computer move": comp_move,
+        "result": result,
+        "stats": stats
+    }
+
+
+def clip_loop():
     while True:
         player_move = input_choice()
-        df = load_results()
-        stats = basic_stats(df)
-
         if player_move == "Good bye":
             print("Good bye")
             break
         elif player_move == "stats":
+            stats = basic_stats(load_results())
             print_stats(stats)
             continue
         elif player_move == "Invalid choice!":
             print("Invalid choice!")
             continue
 
-        comp_move = computer_choice()
-        result = determine_winner(player_move, comp_move)
-        append_result(result)
-        print(f"You chose {CHOICE[player_move]}, computer chose {CHOICE[comp_move]}")
-        print(result)
+        outcome = play_round(player_move)
+        print(f"You chose {CHOICE[player_move]}, computer chose {CHOICE[outcome['computer move']]}")
+        print(outcome['result'])
+
+# if __name__ == "__main__":
+#     clip_loop()
